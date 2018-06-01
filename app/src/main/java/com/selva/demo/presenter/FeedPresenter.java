@@ -1,0 +1,60 @@
+package com.selva.demo.presenter;
+
+import android.content.Context;
+import android.support.annotation.Nullable;
+
+import com.selva.demo.model.Response;
+import com.selva.demo.service.ApiClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+
+/**
+ * Class is to fetch the feed from web server
+ * and update the response to feed view
+ *
+ * @author selva.raman
+ * @version 1.0
+ * @since 5/31/2018
+ */
+
+public class FeedPresenter {
+    private FeedsView mFeedsView;
+    private ApiClient mApiClient;
+
+    /**
+     * Constructor with parameter
+     *
+     * @param mFeedsView the FeedsView
+     */
+    public FeedPresenter(FeedsView mFeedsView) {
+        this.mFeedsView = mFeedsView;
+        if (null == mApiClient) {
+            mApiClient = new ApiClient();
+        }
+    }
+
+    /**
+     * Method is get the feeds from web server
+     *
+     * @param context the activity context
+     */
+    public void getFeeds(Context context) {
+        mApiClient.getApiClient(context).getFeeds().enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(@Nullable Call<Response> call, @Nullable retrofit2.Response<Response> response) {
+                if (null != response) {
+                    Response res = response.body();
+                    if (null != res && res.getFeedsList() != null) {
+                        mFeedsView.updateFeedsView(res);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@Nullable Call<Response> call, @Nullable Throwable t) {
+
+            }
+        });
+    }
+}
