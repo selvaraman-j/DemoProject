@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.selva.demo.R;
 import com.selva.demo.model.Feeds;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.FeedsViewHol
         if (null != feeds) {
             holder.mTextViewTitle.setText(feeds.getTitle());
             holder.mTextViewDescription.setText(feeds.getDescription());
+            Picasso.get().load(feeds.getImageHref()).into(holder.mImageViewFeed);
         }
     }
 

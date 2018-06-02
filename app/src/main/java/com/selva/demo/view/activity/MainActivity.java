@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements FeedsCallback {
      */
     @Override
     public void showSnackBarMessage(String message) {
-        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.no_internet_connection
+        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message
                 , Snackbar.LENGTH_INDEFINITE)
                 .setAction("RETRY", new View.OnClickListener() {
 

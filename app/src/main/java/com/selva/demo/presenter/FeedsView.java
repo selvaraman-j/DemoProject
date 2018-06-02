@@ -12,4 +12,6 @@ import com.selva.demo.model.Response;
 
 public interface FeedsView {
     void updateFeedsView(Response response);
+
+    void onResponseFailure();
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.selva.demo.DemoApplication;
+
 /**
  * Class for only network utility
  *
@@ -16,11 +18,11 @@ public final class NetworkUtils {
     /**
      * Method is to check whether the internet connection is available or not
      *
-     * @param context context of the application
      * @return true if device is connected to internet otherwise false
      */
-    public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isNetworkConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) DemoApplication
+                .getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = null;
         if (null != connectivityManager) {
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

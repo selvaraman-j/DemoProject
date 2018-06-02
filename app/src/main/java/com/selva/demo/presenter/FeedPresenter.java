@@ -1,6 +1,5 @@
 package com.selva.demo.presenter;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.selva.demo.model.Response;
@@ -36,24 +35,24 @@ public class FeedPresenter {
 
     /**
      * Method is get the feeds from web server
-     *
-     * @param context the activity context
      */
-    public void getFeeds(Context context) {
-        mApiClient.getApiClient(context).getFeeds().enqueue(new Callback<Response>() {
+    public void getFeeds() {
+        mApiClient.getApiClient().getFeeds().enqueue(new Callback<Response>() {
             @Override
             public void onResponse(@Nullable Call<Response> call, @Nullable retrofit2.Response<Response> response) {
-                if (null != response) {
+                if (null != response && response.isSuccessful()) {
                     Response res = response.body();
                     if (null != res && res.getFeedsList() != null) {
                         mFeedsView.updateFeedsView(res);
                     }
+                } else {
+                    mFeedsView.onResponseFailure();
                 }
             }
 
             @Override
             public void onFailure(@Nullable Call<Response> call, @Nullable Throwable t) {
-
+                mFeedsView.onResponseFailure();
             }
         });
     }

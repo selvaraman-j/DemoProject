@@ -1,6 +1,6 @@
 package com.selva.demo.service;
 
-import android.content.Context;
+import com.selva.demo.DemoApplication;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,17 +29,16 @@ public class ApiClient {
     /**
      * Method is to initialise the retrofit instance
      *
-     * @param context the application context
-     * @return ApiService
+     * @return ApiService the ApiService
      */
-    public ApiService getApiClient(Context context) {
+    public ApiService getApiClient() {
         if (null == mRetrofit) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.readTimeout(60, TimeUnit.SECONDS);
             builder.connectTimeout(60, TimeUnit.SECONDS);
 
             int cacheSize = 10 * 1024 * 1024;//10Mb
-            Cache cache = new Cache(context.getCacheDir(), cacheSize);
+            Cache cache = new Cache(DemoApplication.getContext().getCacheDir(), cacheSize);
             builder.cache(cache);
             OkHttpClient okHttpClient = builder.build();
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_title_text_size">18sp</dimen>
-    <dimen name="item_description_text_size">16sp</dimen>
-    <dimen name="arrow_size">20dp</dimen>
-    <dimen name="item_image_size">100dp</dimen>
+    <dimen name="item_feed_title_text_size">18sp</dimen>
+    <dimen name="item_feed_description_text_size">16sp</dimen>
+    <dimen name="item_feed_arrow_size">20dp</dimen>
+    <dimen name="item_feed_image_max_size">100dp</dimen>
     <dimen name="item_feed_padding">10dp</dimen>
+    <dimen name="item_feed_margin_left">5dp</dimen>
 </resources>

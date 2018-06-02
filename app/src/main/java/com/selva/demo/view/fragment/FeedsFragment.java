@@ -13,12 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.selva.demo.R;
+import com.selva.demo.model.Feeds;
 import com.selva.demo.model.Response;
 import com.selva.demo.presenter.FeedPresenter;
 import com.selva.demo.presenter.FeedsCallback;
 import com.selva.demo.presenter.FeedsView;
 import com.selva.demo.utils.NetworkUtils;
 import com.selva.demo.view.adapter.FeedsAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class is to display feeds from web service
@@ -42,7 +46,9 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mFeedsCallback = (FeedsCallback) context;
+        if (null != context) {
+            mFeedsCallback = (FeedsCallback) context;
+        }
     }
 
     /**
@@ -95,14 +101,14 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      * if device connected to internet
      */
     private void getFeeds() {
-        if (!NetworkUtils.isNetworkConnected(getActivity())) {
+        if (!NetworkUtils.isNetworkConnected()) {
             mSwipeRefreshLayout.setRefreshing(false);
             mFeedsCallback.showSnackBarMessage(getString(R.string.no_internet_connection));
             return;
         }
         mSwipeRefreshLayout.setRefreshing(true);
         // Fetching data from server
-        mFeedPresenter.getFeeds(getActivity());
+        mFeedPresenter.getFeeds();
     }
 
     /**
@@ -114,16 +120,41 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     /**
+     * Method is to remove null feeds
+     *
+     * @param feedsList the list of feeds
+     * @return List the non null feeds list
+     */
+    private List<Feeds> removeNullFeeds(List<Feeds> feedsList) {
+        List<Feeds> temporaryFeedsList = new ArrayList<>();
+        for (Feeds feeds : feedsList) {
+            if (null != feeds && null != feeds.getTitle()
+                    && null != feeds.getDescription() && null != feeds.getImageHref()) {
+                temporaryFeedsList.add(feeds);
+            }
+        }
+        return temporaryFeedsList;
+    }
+
+    /**
      * Method is to update feeds response to views
      *
      * @param response the FeedsResponse
      */
     @Override
     public void updateFeedsView(Response response) {
+        if (null == mFeedsCallback) return;
         if (null != response.getTitle()) {
             mFeedsCallback.updateTitle(response.getTitle());
         }
-        mFeedsView.setAdapter(new FeedsAdapter(response.getFeedsList()));
+        mFeedsView.setAdapter(new FeedsAdapter(removeNullFeeds(response.getFeedsList())));
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onResponseFailure() {
+        if (null == mFeedsCallback) return;
+        mSwipeRefreshLayout.setRefreshing(false);
+        mFeedsCallback.showSnackBarMessage(getString(R.string.something_went_wrong));
     }
 }
