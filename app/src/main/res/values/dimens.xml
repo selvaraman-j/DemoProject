@@ -6,4 +6,5 @@
     <dimen name="item_feed_image_max_size">100dp</dimen>
     <dimen name="item_feed_padding">10dp</dimen>
     <dimen name="item_feed_margin_left">5dp</dimen>
+    <dimen name="feed_details_padding">10dp</dimen>
 </resources>

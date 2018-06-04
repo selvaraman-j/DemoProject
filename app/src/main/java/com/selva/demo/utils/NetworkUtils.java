@@ -22,7 +22,7 @@ public final class NetworkUtils {
      */
     public static boolean isNetworkConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) DemoApplication
-                .getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                .getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = null;
         if (null != connectivityManager) {
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

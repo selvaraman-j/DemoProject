@@ -3,5 +3,5 @@
     <string name="right_arrow">right arrow</string>
     <string name="description_image">description image</string>
     <string name="no_internet_connection">No Internet Connection!</string>
-    <string name="something_went_wrong">Something Went Wrong!</string>
+    <string name="something_went_wrong">Something Went Wrong! Please try again!!</string>
 </resources>

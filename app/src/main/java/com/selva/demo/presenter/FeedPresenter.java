@@ -18,7 +18,7 @@ import retrofit2.Callback;
  */
 
 public class FeedPresenter {
-    private FeedsView mFeedsView;
+    private final FeedsView mFeedsView;
     private ApiClient mApiClient;
 
     /**

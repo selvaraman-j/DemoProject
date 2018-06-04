@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.selva.demo.R;
 import com.selva.demo.model.Feeds;
@@ -18,7 +19,9 @@ import com.selva.demo.model.Response;
 import com.selva.demo.presenter.FeedPresenter;
 import com.selva.demo.presenter.FeedsCallback;
 import com.selva.demo.presenter.FeedsView;
+import com.selva.demo.presenter.OnFeedItemClickListener;
 import com.selva.demo.utils.NetworkUtils;
+import com.selva.demo.view.activity.MainActivity;
 import com.selva.demo.view.adapter.FeedsAdapter;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import java.util.List;
 
 public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, FeedsView {
     private List<Feeds> mFeedsList;
+    private TextView mNoInternetText;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mFeedsView;
     private FeedPresenter mFeedPresenter;
@@ -78,6 +82,7 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void initializeViews(View view) {
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_layout);
         mFeedsView = view.findViewById(R.id.feeds_view);
+        mNoInternetText = view.findViewById(R.id.text_no_internet);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary
                 , android.R.color.holo_green_dark, android.R.color.holo_orange_dark
@@ -95,6 +100,10 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         mFeedsView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mFeedPresenter = new FeedPresenter(FeedsFragment.this);
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showOrHideNavIcon(false);
+        }
     }
 
     /**
@@ -103,13 +112,30 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
      */
     private void getFeeds() {
         if (!NetworkUtils.isNetworkConnected()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mFeedsCallback.showSnackBarMessage(getString(R.string.no_internet_connection));
+            showOrHideRecyclerView(false);
             return;
         }
-        mSwipeRefreshLayout.setRefreshing(true);
+        showOrHideRecyclerView(true);
         // Fetching data from server
         mFeedPresenter.getFeeds();
+    }
+
+    /**
+     * Method is to show or hide the feed list view and no internet connection view
+     *
+     * @param isShow boolean true if wants to show the feeds list view otherwise false
+     */
+    private void showOrHideRecyclerView(boolean isShow) {
+        if (isShow) {
+            mNoInternetText.setVisibility(View.GONE);
+            mFeedsView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            mNoInternetText.setText(getString(R.string.no_internet_connection));
+            mSwipeRefreshLayout.setRefreshing(false);
+            mNoInternetText.setVisibility(View.VISIBLE);
+            mFeedsView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -158,14 +184,22 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             mFeedsCallback.updateTitle(response.getTitle());
         }
         mFeedsList = removeNullFeeds(response.getFeedsList());
-        mFeedsView.setAdapter(new FeedsAdapter(mFeedsList));
+        mFeedsView.setAdapter(new FeedsAdapter(mFeedsList, new OnFeedItemClickListener() {
+
+            @Override
+            public void onItemClick(Feeds feed) {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).loadFragment(FeedDetailedFragment
+                            .getInstance(feed), FeedDetailedFragment.class.getSimpleName());
+                }
+            }
+        }));
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onResponseFailure() {
-        if (null == mFeedsCallback) return;
-        mSwipeRefreshLayout.setRefreshing(false);
-        mFeedsCallback.showSnackBarMessage(getString(R.string.something_went_wrong));
+        showOrHideRecyclerView(false);
+        mNoInternetText.setText(getString(R.string.something_went_wrong));
     }
 }

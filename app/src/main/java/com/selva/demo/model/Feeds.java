@@ -2,6 +2,8 @@ package com.selva.demo.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Class is to store feed items
  *
@@ -10,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
  * @since 5/31/2018
  */
 
-public class Feeds {
+public class Feeds implements Serializable {
 
     @SerializedName("title")
     private String title;

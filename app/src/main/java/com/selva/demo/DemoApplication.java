@@ -1,7 +1,9 @@
 package com.selva.demo;
 
 import android.app.Application;
-import android.content.Context;
+
+import com.selva.demo.presenter.ConnectionReceiverListener;
+import com.selva.demo.receiver.ConnectivityReceiver;
 
 /**
  * Class is to keep a reference of the application context
@@ -12,21 +14,30 @@ import android.content.Context;
  */
 
 public class DemoApplication extends Application {
-    private static Context mApplicationContext;
+    private static DemoApplication mInstance;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mApplicationContext = getApplicationContext();
+        mInstance = this;
     }
 
     /**
-     * Method is to return the application context
+     * Method is to get the instance of application context
      *
-     * @return Context the application context
+     * @return DemoApplication the application instance
      */
-    public static Context getContext() {
-        return mApplicationContext;
+    public static synchronized DemoApplication getInstance() {
+        return mInstance;
     }
 
+    /**
+     * Method is to set the connectivity listener
+     *
+     * @param listener the ConnectionReceiverListener
+     */
+    public void setConnectionReceiverListener(ConnectionReceiverListener listener) {
+        ConnectivityReceiver.mConnectionReceiverListener = listener;
+    }
 }

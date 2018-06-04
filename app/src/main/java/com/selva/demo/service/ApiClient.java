@@ -38,7 +38,8 @@ public class ApiClient {
             builder.connectTimeout(60, TimeUnit.SECONDS);
 
             int cacheSize = 10 * 1024 * 1024;//10Mb
-            Cache cache = new Cache(DemoApplication.getContext().getCacheDir(), cacheSize);
+            Cache cache = new Cache(DemoApplication.getInstance()
+                    .getApplicationContext().getCacheDir(), cacheSize);
             builder.cache(cache);
             OkHttpClient okHttpClient = builder.build();
 

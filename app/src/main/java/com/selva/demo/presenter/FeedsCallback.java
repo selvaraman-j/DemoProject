@@ -11,6 +11,4 @@ package com.selva.demo.presenter;
 
 public interface FeedsCallback {
     void updateTitle(String title);
-
-    void showSnackBarMessage(String message);
 }

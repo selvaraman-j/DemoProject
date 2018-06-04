@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.selva.demo.R;
 import com.selva.demo.model.Feeds;
+import com.selva.demo.presenter.OnFeedItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,10 +24,12 @@ import java.util.List;
  */
 
 public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.FeedsViewHolder> {
-    private List<Feeds> mFeedsList;
+    private final List<Feeds> mFeedsList;
+    private final OnFeedItemClickListener mOnFeedItemClickListener;
 
-    public FeedsAdapter(List<Feeds> mFeedsList) {
+    public FeedsAdapter(List<Feeds> mFeedsList, OnFeedItemClickListener onFeedItemClickListener) {
         this.mFeedsList = mFeedsList;
+        this.mOnFeedItemClickListener = onFeedItemClickListener;
     }
 
     @NonNull
@@ -53,15 +56,24 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.FeedsViewHol
     }
 
     class FeedsViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTextViewTitle;
-        private TextView mTextViewDescription;
-        private ImageView mImageViewFeed;
+        private final TextView mTextViewTitle;
+        private final TextView mTextViewDescription;
+        private final ImageView mImageViewFeed;
 
         FeedsViewHolder(View itemView) {
             super(itemView);
             mTextViewTitle = itemView.findViewById(R.id.text_item_title);
             mTextViewDescription = itemView.findViewById(R.id.text_item_description);
             mImageViewFeed = itemView.findViewById(R.id.image_item_feed);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mOnFeedItemClickListener) {
+                        mOnFeedItemClickListener.onItemClick(mFeedsList.get(getAdapterPosition()));
+                    }
+                }
+            });
         }
     }
 }
