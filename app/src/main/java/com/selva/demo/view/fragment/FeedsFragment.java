@@ -33,6 +33,7 @@ import java.util.List;
  */
 
 public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, FeedsView {
+    private List<Feeds> mFeedsList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mFeedsView;
     private FeedPresenter mFeedPresenter;
@@ -137,6 +138,15 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     /**
+     * Method is to return size of feeds list
+     *
+     * @return int the feeds list size
+     */
+    public int getFeedsListSize() {
+        return mFeedsList.size();
+    }
+
+    /**
      * Method is to update feeds response to views
      *
      * @param response the FeedsResponse
@@ -147,7 +157,8 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (null != response.getTitle()) {
             mFeedsCallback.updateTitle(response.getTitle());
         }
-        mFeedsView.setAdapter(new FeedsAdapter(removeNullFeeds(response.getFeedsList())));
+        mFeedsList = removeNullFeeds(response.getFeedsList());
+        mFeedsView.setAdapter(new FeedsAdapter(mFeedsList));
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

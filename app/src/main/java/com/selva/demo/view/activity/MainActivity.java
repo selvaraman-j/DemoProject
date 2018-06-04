@@ -27,10 +27,14 @@ public class MainActivity extends AppCompatActivity implements FeedsCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mCoordinatorLayout = findViewById(R.id.coordinator_layout);
-        //attach fragment to the activity
-        getSupportFragmentManager().beginTransaction().replace(R.id.container
-                , FeedsFragment.getInstance(), FeedsFragment.class.getSimpleName())
-                .commit();
+        if (null == savedInstanceState) {
+            //attach fragment to the activity
+            getSupportFragmentManager().beginTransaction().replace(R.id.container
+                    , FeedsFragment.getInstance(), FeedsFragment.class.getSimpleName())
+                    .commit();
+        } else {
+            findFeedFragment();
+        }
     }
 
     /**
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements FeedsCallback {
      *
      * @return Fragment the FeedsFragment
      */
-    private Fragment findFeedFragment() {
+    public Fragment findFeedFragment() {
         return getSupportFragmentManager().findFragmentByTag(FeedsFragment.class.getSimpleName());
     }
 }
