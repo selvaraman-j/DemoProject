@@ -147,7 +147,7 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     /**
-     * Method is to remove null feeds
+     * Method is to remove all null feeds
      *
      * @param feedsList the list of feeds
      * @return List the non null feeds list
@@ -155,8 +155,8 @@ public class FeedsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<Feeds> removeNullFeeds(List<Feeds> feedsList) {
         List<Feeds> temporaryFeedsList = new ArrayList<>();
         for (Feeds feeds : feedsList) {
-            if (null != feeds && null != feeds.getTitle()
-                    && null != feeds.getDescription() && null != feeds.getImageHref()) {
+            if (null != feeds && (null != feeds.getTitle()
+                    || null != feeds.getDescription() || null != feeds.getImageHref())) {
                 temporaryFeedsList.add(feeds);
             }
         }
